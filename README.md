@@ -6,3 +6,8 @@ run setup.sh
 
 Run pipenv install django djangorestframework to install django
 Use exit to exit out of pipenv
+
+---
+
+pipenv shell
+python manage.py runserver
