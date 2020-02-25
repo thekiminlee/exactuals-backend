@@ -21,6 +21,11 @@ from exactuals import views
 router = routers.DefaultRouter()
 router.register(r'user', views.UserViewSet)
 router.register(r'address', views.AddressViewSet)
+router.register(r'payor', views.PayorViewSet)
+router.register(r'payee', views.PayeeViewSet)
+router.register(r'payor_payee', views.PayorPayeeViewSet)
+router.register(r'bank', views.BankViewSet)
+router.register(r'transaction', views.TransactionViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
