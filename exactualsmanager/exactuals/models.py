@@ -38,8 +38,8 @@ class Payee(models.Model):
 
 class Payor_Payee(models.Model):
     payor_payee_id = models.CharField(max_length=20, unique=True)
-    payor_id = models.OneToOneField(Payor, on_delete=models.CASCADE)
-    payee_id = models.OneToOneField(Payee, on_delete=models.CASCADE)
+    payor_id = models.ForeignKey(Payor, on_delete=models.CASCADE)
+    payee_id = models.ForeignKey(Payee, on_delete=models.CASCADE)
 
 class Bank(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
@@ -48,14 +48,14 @@ class Bank(models.Model):
 
 class Transaction(models.Model):
     transaction_id = models.CharField(max_length=20, unique=True)
-    payor_payee_id = models.OneToOneField(Payor_Payee, on_delete=models.SET("Payor_payee removed"))
+    payor_payee_id = models.ForeignKey(Payor_Payee, on_delete=models.SET("Payor_payee removed"))
     description = models.TextField(blank=True) # optioal field
     memo = models.TextField(blank=True) # optional field
-    batch_id = models.CharField(max_length=20, unique=True, blank=True)
+    batch_id = models.CharField(max_length=20, blank=True)
     date = models.DateTimeField(verbose_name="Transaction Date")
     disbursement = models.CharField(max_length=20)
     amount = models.DecimalField(decimal_places=2, max_digits=14)
     trans_type = models.CharField(max_length=20)
-    timezone = models.CharField(max_length=10) 
+    timezone = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
-    status_date = models.DateTimeField(verbose_name="Transaction Status Date") 
+    status_date = models.DateTimeField(verbose_name="Transaction Status Date")
