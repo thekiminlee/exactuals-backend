@@ -28,5 +28,5 @@ class BankViewSet(viewsets.ModelViewSet):
     serializer_class = BankSerializer
 
 class TransactionViewSet(viewsets.ModelViewSet):
-    queryset = Transaction.objects.order_by('date').all()
+    queryset = Transaction.objects.order_by('-date').all()
     serializer_class = TransactionSerializer

@@ -25,6 +25,7 @@ SECRET_KEY = '226l8@jdk80%i36q@z$rv7vhr4%5c#*^cids9@=2zh4^l442lw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['192.168.1.9'] # For mobile access with LAN, python manage.py runserver 192.168.1.9:8000
 ALLOWED_HOSTS = []
 
 
