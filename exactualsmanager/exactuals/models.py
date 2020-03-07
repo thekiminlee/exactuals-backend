@@ -12,7 +12,7 @@ Foreign/OneToOne on_delete options:
 
 class User(models.Model):
     user_id = models.CharField(max_length=20, unique=True, primary_key=True)
-    passworld = models.CharField(max_length=30, min_length=8)
+    password = models.CharField(max_length=30)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=100, unique=True)
