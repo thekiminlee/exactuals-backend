@@ -56,6 +56,6 @@ class Transaction(models.Model):
     disbursement = models.CharField(max_length=20)
     amount = models.DecimalField(decimal_places=2, max_digits=14)
     trans_type = models.CharField(max_length=20)
-    timezone = models.CharField(max_length=10) 
+    timezone = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
-    status_date = models.DateTimeField(verbose_name="Transaction Status Date") 
+    status_date = models.DateTimeField(verbose_name="Transaction Status Date")
