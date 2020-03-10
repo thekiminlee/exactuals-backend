@@ -42,6 +42,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def get_by_ppid(self, request, pk):
-        transactions = Transaction.objects.filter(payor_payee_id=pk)
+        transactions = Transaction.objects.filter(ppid=pk)
         transactions_json = TransactionSerializer(transactions, many=True)
-        return Response(transactions_json,data)
+        return Response(transactions_json.data)
