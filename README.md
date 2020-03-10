@@ -1,16 +1,9 @@
 # Exactuals
 
-Environment setup (only run it once)
-
-```
-run setup.sh
-./setup.sh
-```
-
-Run `pipenv install django djangorestframework` to install django <br>
+Run `pipenv install django djangorestframework` to install django and django rest framework <br>
 Use `exit` to exit out of pipenv
 
----
+To start local server, run:
 
 ```sh
 pipenv shell
@@ -21,11 +14,11 @@ python manage.py runserver
 
 ModelViewSet takes care of basic CRUD operation. <br><br>
 
-#### Specific API Endpoints
+#### API Endpoints
 
 <strong>User</strong>
 
-- getting User by name (first or last): `<url>/users/<string:pk>/get_by_name/`
+- getting User by name (first or last): `<url>/user/<string:pk>/get_by_name/`
 
 <strong>Transaction</strong>
 
