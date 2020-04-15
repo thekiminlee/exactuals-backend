@@ -34,6 +34,19 @@ class PayorPayeeViewSet(viewsets.ModelViewSet):
     queryset = Payor_Payee.objects.all()
     serializer_class = PayorPayeeSerializer
 
+    @action(detail=True)
+    def payor(self, request, pk):
+        payor_payee = Payor_Payee.objects.filter(payor_id=pk)
+        payor_payee_json = PayorPayeeSerializer(payor_payee, many=True)
+        return Response(payor_payee_json.data)
+    
+    @action(detail=True)
+    def payee(self, request, pk):
+        payor_payee = Payor_Payee.objects.filter(payee_id=pk)
+        payor_payee_json = PayorPayeeSerializer(payor_payee, many=True)
+        return Response(payor_payee_json.data)
+
+
 class BankViewSet(viewsets.ModelViewSet):
     queryset = Bank.objects.all()
     serializer_class = BankSerializer
