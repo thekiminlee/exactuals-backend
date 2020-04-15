@@ -17,6 +17,7 @@ class User(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=100, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
+    user_type = models.CharField(max_length=10)
 
 class Address(models.Model):
     uid = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -28,30 +29,30 @@ class Address(models.Model):
     country = models.CharField(max_length=30)
 
 class Payor(models.Model):
-    uid = models.OneToOneField(User, on_delete=models.CASCADE)
+    uid = models.OneToOneField(User, to_field='uid', primary_key=True, on_delete=models.CASCADE)
     send_payment_method = models.CharField(max_length=20)
 
 class Payee(models.Model):
-    uid = models.OneToOneField(User, on_delete=models.CASCADE)
+    uid = models.OneToOneField(User, to_field='uid', primary_key=True, on_delete=models.CASCADE)
     preference = models.CharField(max_length=100)
     receive_payment_method = models.CharField(max_length=20)
 
 class Payor_Payee(models.Model):
-    ppid = models.CharField(max_length=20, unique=True)
+    ppid = models.CharField(max_length=20, primary_key=True, unique=True)
     payor_id = models.ForeignKey(Payor, on_delete=models.CASCADE)
     payee_id = models.ForeignKey(Payee, on_delete=models.CASCADE)
 
 class Bank(models.Model):
-    uid = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    uid = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
     account_num = models.IntegerField()
     rounting_num = models.IntegerField()
 
 class Transaction(models.Model):
-    tid = models.CharField(max_length=20, unique=True)
-    ppid = models.ForeignKey(Payor_Payee, to_field="ppid", db_column="ppid", on_delete=models.SET("Payor_payee removed"))
+    tid = models.CharField(max_length=20, primary_key=True, unique=True) # transaction id
+    ppid = models.ForeignKey(Payor_Payee, on_delete=models.SET("Payor_payee removed"))
     description = models.TextField(blank=True) # optioal field
     memo = models.TextField(blank=True) # optional field
-    bid = models.CharField(max_length=20, blank=True)
+    bid = models.CharField(max_length=20, blank=True) # batch id
     date = models.DateTimeField(verbose_name="Transaction Date")
     disbursement = models.CharField(max_length=20)
     amount = models.DecimalField(decimal_places=2, max_digits=14)

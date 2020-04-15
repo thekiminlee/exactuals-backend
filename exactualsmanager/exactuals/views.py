@@ -21,10 +21,12 @@ class AddressViewSet(viewsets.ModelViewSet):
     serializer_class = AddressSerializer
 
 class PayorViewSet(viewsets.ModelViewSet):
+    lookup_field = 'uid'
     queryset = Payor.objects.all()
     serializer_class = PayorSerializer
 
 class PayeeViewSet(viewsets.ModelViewSet):
+    lookup_field = 'uid'
     queryset = Payee.objects.all()
     serializer_class = PayeeSerializer
     
@@ -45,3 +47,18 @@ class TransactionViewSet(viewsets.ModelViewSet):
         transactions = Transaction.objects.filter(ppid=pk)
         transactions_json = TransactionSerializer(transactions, many=True)
         return Response(transactions_json.data)
+    
+    @action(detail=True)
+    def get_by_payor_id(self, request, pk):
+        ppids = Payor_Payee.objects.filter(payor_id=pk).values_list('ppid')
+        transactions = Transaction.objects.filter(ppid__in=ppids)
+        transactions_json = TransactionSerializer(transactions, many=True)
+        return Response(transactions_json.data)
+
+    @action(detail=True)
+    def get_by_payee_id(self, request, pk):
+        ppids = Payor_Payee.objects.filter(payee_id=pk).values_list('ppid')
+        transactions = Transaction.objects.filter(ppid__in=ppids)
+        transactions_json = TransactionSerializer(transactions, many=True)
+        return Response(transactions_json.data)
+
