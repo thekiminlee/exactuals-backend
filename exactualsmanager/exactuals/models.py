@@ -17,7 +17,11 @@ class User(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=100, unique=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    user_type = models.CharField(max_length=10)
+
+    class Type(models.TextChoices):
+        PYR = "Payor"
+        PYE = "Payee"
+    user_type = models.CharField(max_length=10, choices=Type.choices)
 
 class Address(models.Model):
     uid = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -44,6 +48,7 @@ class Payor_Payee(models.Model):
 
 class Bank(models.Model):
     uid = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    bank_name = models.CharField(max_length=50)
     account_num = models.IntegerField()
     rounting_num = models.IntegerField()
 
@@ -59,4 +64,54 @@ class Transaction(models.Model):
     trans_type = models.CharField(max_length=20)
     timezone = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
-    status_date = models.DateTimeField(verbose_name="Transaction Status Date")
+    status_date = models.DateTimeField(auto_now=True, verbose_name="Transaction Status Date")
+
+class UserData(models.Model):
+    # Transaction information
+    payor_id = models.ForeignKey(Payor, on_delete=models.DO_NOTHING)
+    payee_id = models.ForeignKey(Payee, on_delete=models.DO_NOTHING)
+    ppid = models.ForeignKey(Payor_Payee, on_delete=models.DO_NOTHING)
+    bank_name = models.CharField(max_length=50, blank=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=14)
+    transaction_status = models.BooleanField(null=True) # T: Delivered, F: Returned
+    transaction_cost = models.DecimalField(decimal_places=2, max_digits=14)
+    transaction_state_date = models.DateTimeField(auto_now=True)
+    transaction_end_date = models.DateTimeField(null=True)
+    transaction_revenue = models.BooleanField()
+    class Processors(models.IntegerChoices):
+        A = 1
+        B = 2
+        C = 3
+    processor_type = models.IntegerField(choices=Processors.choices)
+    class Countries(models.IntegerChoices):
+        # maps UN A3 country abbr to UN NUM country abbr
+        KOR = 410
+        CHN = 156
+        USA = 840
+        FRA = 250
+        BRA = 76
+        DEU = 276
+        MEX = 484
+        IND = 356
+    country = models.IntegerField(choices=Countries.choices)
+
+    # Currency information
+    class Currency(models.IntegerChoices):
+        # maps ISO currency abbr to NUM abbr
+        KRW = 410
+        CNY = 156
+        USD = 840
+        EUR = 978 # FRA & DEU
+        BRL = 986
+        MXN = 484
+        INR = 356
+    original_currency = models.IntegerField(choices=Currency.choices)
+    target_currency = models.IntegerField(choices=Currency.choices)
+    fx = models.BooleanField()
+
+    # Satisfaction
+    payee_satisfaction = models.BooleanField(null=True)
+    payor_satisfaction = models.BooleanField(null=True)
+    overall_satisfaction = models.BooleanField(null=True)
+    
+

@@ -1,9 +1,13 @@
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework import status
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from exactuals.models import User, Address, Payor, Payee, Payor_Payee, Bank, Transaction
-from exactuals.serializers import UserSerializer, AddressSerializer, PayorSerializer, PayeeSerializer, PayorPayeeSerializer, BankSerializer, TransactionSerializer
+from exactuals.models import User, Address, Payor, Payee, Payor_Payee, Bank, Transaction, UserData
+from exactuals.serializers import UserSerializer, AddressSerializer, PayorSerializer, PayeeSerializer, PayorPayeeSerializer, BankSerializer, TransactionSerializer, UserDataSerializer
+
+from exactuals.prediction.predict import Prediction
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -74,4 +78,13 @@ class TransactionViewSet(viewsets.ModelViewSet):
         transactions = Transaction.objects.filter(ppid__in=ppids)
         transactions_json = TransactionSerializer(transactions, many=True)
         return Response(transactions_json.data)
+
+class UserDataViewSet(viewsets.ModelViewSet):
+    queryset = UserData.objects.all()
+    serializer_class = UserDataSerializer
+
+class PredictView(viewsets.ViewSet):
+    
+    def list(self, request, pk=None):
+        return Response(request.data, status=status.HTTP_200_OK)
 

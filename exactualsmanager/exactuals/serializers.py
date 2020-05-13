@@ -1,4 +1,4 @@
-from exactuals.models import User, Address, Payor, Payee, Payor_Payee, Bank, Transaction
+from exactuals.models import User, Address, Payor, Payee, Payor_Payee, Bank, Transaction, UserData
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,5 +34,10 @@ class BankSerializer(serializers.ModelSerializer):
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
+        fields = '__all__'
+
+class UserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserData
         fields = '__all__'
 
