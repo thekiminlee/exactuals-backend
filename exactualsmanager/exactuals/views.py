@@ -9,6 +9,7 @@ from exactuals.serializers import UserSerializer, AddressSerializer, PayorSerial
 
 from exactuals.prediction.predict import Prediction
 from exactuals.logics import logic
+import json
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -97,11 +98,13 @@ class UserDataViewSet(viewsets.ModelViewSet):
             serializer.save()
             predict = Prediction(serializer.data)
 
-            print(predict.predict_payee())
-            print(predict.predict_payor())
-            print(predict.predict_overall())
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            prediction = {
+                "payee_satisfaction": predict.predict_payee(),
+                "payor_satisfaction": predict.predict_payor(),
+                "overall_satisfaction": predict.predict_overall()
+            }
+            
+            return Response(prediction, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
 

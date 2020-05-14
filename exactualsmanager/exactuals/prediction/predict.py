@@ -24,16 +24,16 @@ class Prediction():
         model = XGBClassifier()
         model.load_model(FILE.PAYEE_MODEL)
         prediction = model.predict(self.df)
-        return prediction
+        return int(prediction[0])
 
     def predict_payor(self):
         model = XGBClassifier()
         model.load_model(FILE.PAYOR_MODEL)
         prediction = model.predict(self.df)
-        return prediction
+        return int(prediction[0])
 
     def predict_overall(self):
         model = XGBClassifier()
         model.load_model(FILE.OVERALL_MODEL)
         prediction = model.predict(self.df)
-        return prediction
+        return int(prediction[0])
