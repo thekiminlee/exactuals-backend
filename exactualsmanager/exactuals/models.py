@@ -69,20 +69,23 @@ class Transaction(models.Model):
 class UserData(models.Model):
     # Transaction information
     payor_id = models.ForeignKey(Payor, on_delete=models.DO_NOTHING)
+    pyr_id = models.IntegerField(blank=True)
     payee_id = models.ForeignKey(Payee, on_delete=models.DO_NOTHING)
-    ppid = models.ForeignKey(Payor_Payee, on_delete=models.DO_NOTHING)
+    pye_id = models.IntegerField(blank=True)
+    payor_payee_id = models.ForeignKey(Payor_Payee, on_delete=models.DO_NOTHING)
+    ppid = models.IntegerField(blank=True)
     bank_name = models.CharField(max_length=50, blank=True)
     amount = models.DecimalField(decimal_places=2, max_digits=14)
     transaction_status = models.BooleanField(null=True) # T: Delivered, F: Returned
     transaction_cost = models.DecimalField(decimal_places=2, max_digits=14)
-    transaction_state_date = models.DateTimeField(auto_now=True)
+    transaction_start_date = models.DateTimeField(auto_now=True)
     transaction_end_date = models.DateTimeField(null=True)
     transaction_revenue = models.BooleanField()
     class Processors(models.IntegerChoices):
         A = 1
         B = 2
         C = 3
-    processor_type = models.IntegerField(choices=Processors.choices)
+    processor = models.IntegerField(choices=Processors.choices)
     class Countries(models.IntegerChoices):
         # maps UN A3 country abbr to UN NUM country abbr
         KOR = 410

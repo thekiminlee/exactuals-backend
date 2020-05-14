@@ -8,6 +8,7 @@ from exactuals.models import User, Address, Payor, Payee, Payor_Payee, Bank, Tra
 from exactuals.serializers import UserSerializer, AddressSerializer, PayorSerializer, PayeeSerializer, PayorPayeeSerializer, BankSerializer, TransactionSerializer, UserDataSerializer
 
 from exactuals.prediction.predict import Prediction
+from exactuals.logics import logic
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -83,8 +84,25 @@ class UserDataViewSet(viewsets.ModelViewSet):
     queryset = UserData.objects.all()
     serializer_class = UserDataSerializer
 
-class PredictView(viewsets.ViewSet):
-    
-    def list(self, request, pk=None):
-        return Response(request.data, status=status.HTTP_200_OK)
+    def create(self, request, pk=None):
+        data = request.data
+        data._mutable = True
+        data['pyr_id'] = logic.encode(data['payor_id'])
+        data['pye_id'] = logic.encode(data['payee_id'])
+        data['ppid'] = logic.encode(data['payor_payee_id'])
+        data._mutable = False
+        serializer = UserDataSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            predict = Prediction(serializer.data)
+
+            print(predict.predict_payee())
+            print(predict.predict_payor())
+            print(predict.predict_overall())
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
 

@@ -27,7 +27,6 @@ router.register(r'payor_payee', views.PayorPayeeViewSet)
 router.register(r'bank', views.BankViewSet)
 router.register(r'transaction', views.TransactionViewSet)
 router.register(r'user_data', views.UserDataViewSet)
-router.register(r'predict', views.PredictView, basename='predict')
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
