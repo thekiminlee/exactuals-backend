@@ -85,27 +85,64 @@ class UserDataViewSet(viewsets.ModelViewSet):
     queryset = UserData.objects.all()
     serializer_class = UserDataSerializer
 
-    def create(self, request, pk=None):
-        data = request.data
+    def _mutate_data(self, data):
         data._mutable = True
         data['pyr_id'] = logic.encode(data['payor_id'])
         data['pye_id'] = logic.encode(data['payee_id'])
         data['ppid'] = logic.encode(data['payor_payee_id'])
         data._mutable = False
+
+        return data
+
+    def create(self, request, pk=None):
+        data = self._mutate_data(request.data)
         serializer = UserDataSerializer(data=data)
 
         if serializer.is_valid():
             serializer.save()
             predict = Prediction(serializer.data)
+            prediction = predict.predict()
 
-            prediction = {
-                "payee_satisfaction": predict.predict_payee(),
-                "payor_satisfaction": predict.predict_payor(),
-                "overall_satisfaction": predict.predict_overall()
+            result = {
+                "A": prediction['A'],
+                "B": prediction['B'],
+                "C": prediction['C']
             }
             
-            return Response(prediction, status=status.HTTP_201_CREATED)
+            return Response(result, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) 
+
+    @action(detail=True)
+    def predict_by_payee_rating(self, request, pk):
+        data = self._mutate_data(request.data) 
+        serializer = UserDataSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            predict = Prediction(serializer.data)
+            prediction = None
+            predictor = "_satisfaction"
+
+            if pk == 'payee':
+                prediction = predict.predict_payee()
+                predictor = 'payee' + predictor
+            elif pk == 'payor':
+                prediction = predict.predict_payor()
+                predictor = 'payor' + predictor
+            elif pk == 'overall':
+                prediction = predict.predict_overall()
+                predictor = 'overall' + predictor
+
+            result = {
+                predictor: prediction
+            }
+
+            return Response(result, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+
+        return None
 
 
