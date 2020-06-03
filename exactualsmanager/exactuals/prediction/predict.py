@@ -4,6 +4,7 @@ from sklearn.preprocessing import LabelEncoder
 from  exactuals.prediction import FILE
 import random
 from collections import defaultdict
+from exactuals.logics import logic
 
 class Prediction():
     def __init__(self, data):
@@ -14,6 +15,10 @@ class Prediction():
         bool_feat = ['fx', 'transaction_status']
 
         self.df = pd.DataFrame(columns=features[:7] + ['duration'] +features[-5:])
+
+        data['pyr_id'] = logic.encode(data['payor_id'])
+        data['pye_id'] = logic.encode(data['payee_id'])
+        data['ppid'] = logic.encode(data['payor_payee_id'])
 
         for feat in features:
             self.df[feat] = pd.to_numeric(pd.Series(data[feat]))

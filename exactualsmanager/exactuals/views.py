@@ -87,16 +87,16 @@ class UserDataViewSet(viewsets.ModelViewSet):
 
     def _mutate_data(self, data):
         data._mutable = True
-        data['pyr_id'] = logic.encode(data['payor_id'])
-        data['pye_id'] = logic.encode(data['payee_id'])
-        data['ppid'] = logic.encode(data['payor_payee_id'])
+        data['pyr_id'] = 0
+        data['pye_id'] = 0
+        data['ppid'] = 0
         data._mutable = False
 
         return data
 
     def create(self, request, pk=None):
         data = self._mutate_data(request.data)
-        serializer = UserDataSerializer(data=data)
+        serializer = UserDataSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()

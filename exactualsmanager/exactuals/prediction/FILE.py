@@ -1,3 +1,5 @@
-PAYEE_MODEL = 'exactuals/prediction/exactuals_001_label1.model'
-PAYOR_MODEL = 'exactuals/prediction/exactuals_001_label2.model'
-OVERALL_MODEL = 'exactuals/prediction/exactuals_001_label3.model'
+version = '001'
+
+PAYEE_MODEL = 'exactuals/prediction/models/exactuals_' + version + '_label1.model'
+PAYOR_MODEL = 'exactuals/prediction/models/exactuals_' + version + '_label2.model'
+OVERALL_MODEL = 'exactuals/prediction/models/exactuals_' + version + '_label3.model'
