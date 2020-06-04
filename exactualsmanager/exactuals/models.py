@@ -77,10 +77,10 @@ class UserData(models.Model):
     bank_name = models.CharField(max_length=50, blank=True)
     amount = models.DecimalField(decimal_places=2, max_digits=14)
     transaction_status = models.BooleanField(null=True) # T: Delivered, F: Returned
-    transaction_cost = models.DecimalField(decimal_places=2, max_digits=14)
+    transaction_profit = models.DecimalField(decimal_places=2, max_digits=14)
     transaction_start_date = models.DateTimeField(auto_now=True)
     transaction_end_date = models.DateTimeField(null=True)
-    transaction_revenue = models.BooleanField()
+    # transaction_revenue = models.BooleanField()
     class Processors(models.IntegerChoices):
         A = 1
         B = 2

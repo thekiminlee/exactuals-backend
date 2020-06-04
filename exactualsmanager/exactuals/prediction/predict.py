@@ -11,10 +11,24 @@ class Prediction():
         self.processors = {'A': 1, 'B': 2, 'C': 3}
 
         self.labels = ['payee_satisfaction', 'payor_satisfaction', 'overall_satisfaction']
-        features = ['processor', 'amount', 'original_currency', 'target_currency', 'fx', 'transaction_status', 'transaction_cost', 'transaction_revenue', 'pyr_id', 'pye_id', 'ppid', 'country']
+
+        features = ['processor', 
+                    'amount', 
+                    'original_currency', 
+                    'target_currency', 
+                    'fx', 
+                    'transaction_status', 
+                    # 'transaction_cost', 
+                    # 'transaction_revenue',
+                    'transaction_profit', 
+                    'pyr_id', 
+                    'pye_id', 
+                    'ppid', 
+                    'country']
+
         bool_feat = ['fx', 'transaction_status']
 
-        self.df = pd.DataFrame(columns=features[:7] + ['duration'] +features[-5:])
+        self.df = pd.DataFrame(columns=features[:6] + ['duration'] +features[-5:])
 
         data['pyr_id'] = logic.encode(data['payor_id'])
         data['pye_id'] = logic.encode(data['payee_id'])
@@ -23,10 +37,10 @@ class Prediction():
         for feat in features:
             self.df[feat] = pd.to_numeric(pd.Series(data[feat]))
 
-        self.df['fx'] = 1 if self.df['fx'].item() else 0
-        self.df['transaction_status'] = 1 if self.df['transaction_status'].item() else 0
-        self.df['transaction_revenue'] = 1 if self.df['transaction_revenue'].item() else 0
-        self.df['duration'] = random.randint(1,20)
+        for feat in bool_feat:
+            self.df[feat] = 1 if self.df[feat].item() else 0
+
+        self.df['duration'] = random.randint(3,20)
 
     def predict(self):
         result = defaultdict(int)
