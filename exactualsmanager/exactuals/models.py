@@ -10,6 +10,12 @@ Foreign/OneToOne on_delete options:
     DO_NOTHING: "
 '''
 
+class Processors(models.IntegerChoices):
+    A = 1
+    B = 2
+    C = 3
+
+
 class User(models.Model):
     uid = models.CharField(max_length=20, unique=True, primary_key=True)
     password = models.CharField(max_length=30)
@@ -45,6 +51,8 @@ class Payor_Payee(models.Model):
     ppid = models.CharField(max_length=20, primary_key=True, unique=True)
     payor_id = models.ForeignKey(Payor, on_delete=models.CASCADE)
     payee_id = models.ForeignKey(Payee, on_delete=models.CASCADE)
+    satisfaction = models.FloatField(default=0.00)
+    feedback_count = models.IntegerField(default=0)
 
 class Bank(models.Model):
     uid = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
@@ -65,6 +73,8 @@ class Transaction(models.Model):
     timezone = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
     status_date = models.DateTimeField(auto_now=True, verbose_name="Transaction Status Date")
+    satisfaction = models.BooleanField(null=True)
+    processor = models.IntegerField(choices=Processors.choices)
 
 class UserData(models.Model):
     # Transaction information
@@ -81,10 +91,6 @@ class UserData(models.Model):
     transaction_start_date = models.DateTimeField(auto_now=True)
     transaction_end_date = models.DateTimeField(null=True)
     # transaction_revenue = models.BooleanField()
-    class Processors(models.IntegerChoices):
-        A = 1
-        B = 2
-        C = 3
     processor = models.IntegerField(choices=Processors.choices)
     class Countries(models.IntegerChoices):
         # maps UN A3 country abbr to UN NUM country abbr

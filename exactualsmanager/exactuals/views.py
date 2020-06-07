@@ -62,6 +62,32 @@ class TransactionViewSet(viewsets.ModelViewSet):
     serializer_class = TransactionSerializer
 
     @action(detail=True)
+    def update_satisfaction(self, request, pk):
+        ppid = request.data['ppid']
+        tid = request.data['tid']
+
+        transaction = Transaction.objects.filter(tid=tid)
+        payor_payee = Payor_Payee.objects.filter(ppid=ppid)
+
+        if transaction.exists() and payor_payee.exists():
+            transaction = transaction.first()
+            payor_payee = payor_payee.first()
+
+        
+            transaction.satisfaction = pk
+            transaction.save()
+
+            payor_payee.feedback_count += 1
+            if pk:
+                payor_payee.satisfaction = (payor_payee.satisfaction + 1.00)
+            payor_payee.satisfaction /= payor_payee.feedback_count
+            payor_payee.save()
+        
+            return Response({'status': 'update success'})
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(detail=True)
     def get_by_ppid(self, request, pk):
         transactions = Transaction.objects.filter(ppid=pk)
         transactions_json = TransactionSerializer(transactions, many=True)
