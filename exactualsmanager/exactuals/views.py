@@ -61,7 +61,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.order_by('-date').all()
     serializer_class = TransactionSerializer
 
-    @action(detail=True)
+    @action(detail=True, methods=['put'])
     def update_satisfaction(self, request, pk):
         ppid = request.data['ppid']
         tid = request.data['tid']
