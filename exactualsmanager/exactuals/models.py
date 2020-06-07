@@ -51,7 +51,7 @@ class Payor_Payee(models.Model):
     ppid = models.CharField(max_length=20, primary_key=True, unique=True)
     payor_id = models.ForeignKey(Payor, on_delete=models.CASCADE)
     payee_id = models.ForeignKey(Payee, on_delete=models.CASCADE)
-    satisfaction = models.FloatField(default=0.00)
+    satisfaction = models.IntegerField(default=0)
     feedback_count = models.IntegerField(default=0)
 
 class Bank(models.Model):
@@ -73,7 +73,7 @@ class Transaction(models.Model):
     timezone = models.CharField(max_length=10)
     status = models.CharField(max_length=20)
     status_date = models.DateTimeField(auto_now=True, verbose_name="Transaction Status Date")
-    satisfaction = models.BooleanField(null=True)
+    satisfaction = models.IntegerField(null=True)
     processor = models.IntegerField(choices=Processors.choices)
 
 class UserData(models.Model):

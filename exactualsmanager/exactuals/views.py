@@ -69,21 +69,23 @@ class TransactionViewSet(viewsets.ModelViewSet):
         transaction = Transaction.objects.filter(tid=tid)
         payor_payee = Payor_Payee.objects.filter(ppid=ppid)
 
-        if transaction.exists() and payor_payee.exists():
+        if transaction.exists() and payor_payee.exists() and int(pk) in range(1,6):
             transaction = transaction.first()
             payor_payee = payor_payee.first()
 
         
-            transaction.satisfaction = pk
+            transaction.satisfaction = int(pk)
             transaction.save()
 
             payor_payee.feedback_count += 1
-            if pk:
-                payor_payee.satisfaction = (payor_payee.satisfaction + 1.00)
-            payor_payee.satisfaction /= payor_payee.feedback_count
+            payor_payee.satisfaction += int(pk)
             payor_payee.save()
         
-            return Response({'status': 'update success'})
+            return Response({
+                'satisfaction_score': pk,
+                'total_satisfaction_score': payor_payee.satisfaction,
+                'status': 'update success'
+            })
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
